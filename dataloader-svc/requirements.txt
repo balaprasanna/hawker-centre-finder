@@ -1,0 +1,8 @@
+pandas
+geopandas
+jupyter
+s2cell
+beautifulsoup4
+pymongo
+lxml
+dnspython

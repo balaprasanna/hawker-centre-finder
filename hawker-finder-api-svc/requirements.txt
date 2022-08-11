@@ -1,0 +1,6 @@
+pandas
+s2cell
+fastapi
+uvicorn
+pymongo
+dnspython
