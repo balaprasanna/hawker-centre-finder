@@ -2,3 +2,5 @@ pandas
 shapely
 geopandas
 jupyter
+s2cell
+beautifulsoup4
