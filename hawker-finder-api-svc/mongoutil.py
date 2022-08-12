@@ -1,7 +1,8 @@
 
 from pymongo import MongoClient
 import os
-
+from dotenv import load_dotenv
+load_dotenv()
 
 class MongoConnector:
 	conn = None
@@ -11,7 +12,7 @@ class MongoConnector:
 	def connect(cls):
 		if cls.conn is None:
 			db_srv = cls.srv.format(
-				username=os.getenv("MONGO_USER", "<appuser>"), 
+				username=os.getenv("MONGO_USER", "<appuser>"),
 				password=os.getenv("MONGO_PASSWORD", "<password>")
 				)
 			cls.conn = MongoClient(db_srv)

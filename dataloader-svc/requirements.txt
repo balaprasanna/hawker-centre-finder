@@ -6,3 +6,4 @@ beautifulsoup4
 pymongo
 lxml
 dnspython
+python-dotenv
