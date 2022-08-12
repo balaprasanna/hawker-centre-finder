@@ -20,7 +20,7 @@ async def find_near_by_hawker_centre(latitude: float = None, longitude: float = 
     search_by_zones = [14, 13, 12, 11, 10, 9]
 
     total_records = []
-    no_of_zones_seached = 0
+    no_of_zones_searched = 0
 
     for zone in search_by_zones:
         zone_key = f"ZONE_{zone}"
@@ -32,9 +32,9 @@ async def find_near_by_hawker_centre(latitude: float = None, longitude: float = 
         if len(records) > 0:
             total_records.extend(records)
 
-        no_of_zones_seached += 1
+        no_of_zones_searched += 1
         if len(total_records) >= RESULT_COUNT:
             break
 
-    print(no_of_zones_seached)
+    print(no_of_zones_searched)
     return total_records
