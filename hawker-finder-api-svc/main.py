@@ -1,5 +1,9 @@
+import numpy as np
+import pandas as pd
 from fastapi import FastAPI
 from s2cell import s2cell
+from sklearn.neighbors import KDTree
+
 from mongoutil import MongoConnector
 from collections import OrderedDict
 from geopy import distance
@@ -18,6 +22,7 @@ async def root():
 
 @app.get("/find/v1")
 async def find_near_by_hawker_centre_v1(latitude: float = None, longitude: float = None):
+    """Using Google S2 cells search and sort by distance"""
     # available_zones = [20, 19, 17, 16, 15, 14, 13, 12, 11, 10]
     search_by_zones = [14, 13, 12, 11, 10, 9]
 
@@ -50,6 +55,7 @@ async def find_near_by_hawker_centre_v1(latitude: float = None, longitude: float
 
 @app.get("/find/v2")
 async def find_near_by_hawker_centre_v2(latitude: float = None, longitude: float = None):
+    """Fetch All rows & compute distance with geopy distance, sort and return n records"""
     projection = {"_id": False, "NAME": True, "ADDRESS": True, "PHOTOURL": True, "LAT": True, "LONG": True}
     res = collection.find({}, projection)
     all_records = list(res)
@@ -59,6 +65,18 @@ async def find_near_by_hawker_centre_v2(latitude: float = None, longitude: float
     all_records.sort(key=lambda x: x['dist']['m'], reverse=False)
     return all_records[:RESULT_COUNT]
 
+
+@app.get("/find/v3")
+async def find_near_by_hawker_centre_v3(latitude: float = None, longitude: float = None):
+    """Using KDTree: Fetch All rows, Build KDTree & query n neighbour records"""
+    projection = {"_id": False, "NAME": True, "ADDRESS": True, "PHOTOURL": True, "LAT": True, "LONG": True}
+    res = collection.find({}, projection)
+    all_records = list(res)
+    cords = np.array([[rec.get("LAT"), rec.get("LONG")] for rec in all_records])
+    tree = KDTree(cords, leaf_size=2)
+    dist, ind = tree.query(np.array([[latitude, longitude]]), k=RESULT_COUNT)
+    result = pd.Series(all_records).iloc[ind[0]].values.tolist()
+    return result
 
 if __name__ == '__main__':
     import uvicorn
