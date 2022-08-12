@@ -23,18 +23,18 @@ async def find_near_by_hawker_centre(latitude: float = None, longitude: float = 
     no_of_zones_seached = 0
 
     for zone in search_by_zones:
-    	zone_key = f"ZONE_{zone}"
-    	s2cell_val = s2cell.lat_lon_to_cell_id(latitude, longitude, zone)
-    	projection = {"_id": False, "NAME": True, "ADDRESS": True, "PHOTOURL": True, "LAT": True, "LONG": True}
-    	res = collection.find({zone_key: s2cell_val}, projection)
-    	records = list(res)
-    	
-    	if len(records) > 0:
-    		total_records.extend(records)
+        zone_key = f"ZONE_{zone}"
+        s2cell_val = s2cell.lat_lon_to_cell_id(latitude, longitude, zone)
+        projection = {"_id": False, "NAME": True, "ADDRESS": True, "PHOTOURL": True, "LAT": True, "LONG": True}
+        res = collection.find({zone_key: s2cell_val}, projection)
+        records = list(res)
 
-    	no_of_zones_seached += 1
-    	if len(total_records) >= RESULT_COUNT:
-    		break
-    	
+        if len(records) > 0:
+            total_records.extend(records)
+
+        no_of_zones_seached += 1
+        if len(total_records) >= RESULT_COUNT:
+            break
+
     print(no_of_zones_seached)
     return total_records
