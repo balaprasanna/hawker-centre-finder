@@ -13,9 +13,9 @@ collection = client.hawker.dataset
 async def root():
     return {"message": "Welcome to Hawker Finder API"}
 
+
 @app.get("/find")
 async def find_near_by_hawker_centre(latitude: float = None, longitude: float = None):
-    
     # available_zones = [20, 19, 17, 16, 15, 14, 13, 12, 11, 10]
     search_by_zones = [14, 13, 12, 11, 10, 9]
 
