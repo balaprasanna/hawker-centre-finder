@@ -41,7 +41,7 @@ async def find_near_by_hawker_centre_v1(latitude: float = None, longitude: float
                 total_records[rec.get("NAME")] = rec
 
         no_of_zones_searched += 1
-        if len(total_records) >= RESULT_COUNT:
+        if len(total_records) >= RESULT_COUNT*2:
             break
 
     near_by_records = list(total_records.values())
