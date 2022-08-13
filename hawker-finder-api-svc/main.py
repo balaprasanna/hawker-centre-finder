@@ -17,7 +17,7 @@ collection = client.hawker.dataset
 
 @app.get("/")
 async def root():
-    return {"message": "Welcome to Hawker Finder API"}
+    return {"message": "Welcome to Hawker Finder API. Please use /docs endpoint to tryout the apis from browser"}
 
 
 @app.get("/find/v1")

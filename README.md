@@ -59,7 +59,7 @@ version | details
  --- | ---
 v1 | Fetch relevant records from db based on given input lat/long pair's s2cell. The search begins from s2cell level 14 (0.3 KM) until 10 (81 KM). This approach can scale as the db records grows, by expanding the search space. We can improve the speed of the api by caching the lat/long values by s2cell instead of querying from database everytime.
 v2 | Fetch all records from db, compute distance from input lat/long to all pairs and sort them by distance asc.
-v3 | Fetch all records from db, build a KDTrea, query neighbours
+v3 | Fetch all records from db, build a KDTree, query neighbours
 
 
 
