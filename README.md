@@ -1,6 +1,6 @@
 # hawker-centre-finder
 
-## Dataloader script
+## Dataloader svc
 - Input: pass a local geojson dataset filepath
 - You can download the geojson file from here: [dataset link](https://data.gov.sg/dataset/hawker-centres?resource_id=8a6c2f75-5511-4e03-b8f2-23ce67d30b28)
 - Output: It will load the geojson file and parse the content, push the data into database
