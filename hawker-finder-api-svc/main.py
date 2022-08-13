@@ -9,6 +9,7 @@ from collections import OrderedDict
 from geopy import distance
 
 RESULT_COUNT = 5
+LAT_LONG_ERR = "Invalid lat/long values. (-90 <= latitude <= 90) and (-180 <= longitude <= 180)"
 
 app = FastAPI()
 client = MongoConnector.connect()
@@ -23,6 +24,8 @@ async def root():
 @app.get("/find/v1")
 async def find_near_by_hawker_centre_v1(latitude: float = None, longitude: float = None):
     """Using Google S2 cells search and sort by distance"""
+    if not is_valid_lat_long(latitude, longitude):
+        return {"error": LAT_LONG_ERR}
     # available_zones = [20, 19, 17, 16, 15, 14, 13, 12, 11, 10]
     search_by_zones = [14, 13, 12, 11, 10, 9]
 
@@ -51,6 +54,8 @@ async def find_near_by_hawker_centre_v1(latitude: float = None, longitude: float
 @app.get("/find/v2")
 async def find_near_by_hawker_centre_v2(latitude: float = None, longitude: float = None):
     """Fetch All rows & compute distance with geopy distance, sort and return n records"""
+    if not is_valid_lat_long(latitude, longitude):
+        return {"error": LAT_LONG_ERR}
     projection = {"_id": False, "NAME": True, "ADDRESS": True, "PHOTOURL": True, "LAT": True, "LONG": True}
     res = collection.find({}, projection)
     all_records = list(res)
@@ -60,6 +65,8 @@ async def find_near_by_hawker_centre_v2(latitude: float = None, longitude: float
 @app.get("/find/v3")
 async def find_near_by_hawker_centre_v3(latitude: float = None, longitude: float = None):
     """Using KDTree: Fetch All rows, Build KDTree & query n neighbour records"""
+    if not is_valid_lat_long(latitude, longitude):
+        return {"error": LAT_LONG_ERR}
     projection = {"_id": False, "NAME": True, "ADDRESS": True, "PHOTOURL": True, "LAT": True, "LONG": True}
     res = collection.find({}, projection)
     all_records = list(res)
@@ -76,6 +83,11 @@ def add_distance_metric(records, latitude, longitude):
         rec['dist'] = {"m": dist.m, "km": dist.km, "miles": dist.miles}
     records.sort(key=lambda x: x['dist']['m'], reverse=False)
     return records[:RESULT_COUNT]
+
+
+def is_valid_lat_long(latitude, longitude):
+    return -90 <= latitude <= 90 and -180 <= longitude <= 180
+
 
 if __name__ == '__main__':
     import uvicorn
