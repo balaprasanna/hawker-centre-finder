@@ -1,4 +1,5 @@
 # hawker-centre-finder
+Try: http://hakwer-finder.ggd4g0c9fpgybxek.southeastasia.azurecontainer.io/docs#/
 
 ## Dataloader svc
 - Input: pass a local geojson dataset filepath
