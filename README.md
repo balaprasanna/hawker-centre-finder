@@ -7,8 +7,9 @@ Try: http://hakwer-finder.ggd4g0c9fpgybxek.southeastasia.azurecontainer.io/docs#
 - Output: It will load the geojson file and parse the content, push the data into database
 
 Datastore chosen: MongoDB (Atlas managed svc Free Tier)
+---
 |Table schema|
-| -- |
+| --- |
 |- Name |
 |- PHOTOURL|
 |- ADDRESS|
@@ -22,16 +23,16 @@ Datastore chosen: MongoDB (Atlas managed svc Free Tier)
 ### Dev
 - API written in Python (FastAPI framework)
 ----
-Package name | Usage 
- --- | ---
-geopy | Help with compute gistance between two lat,long pairs
-geopandas | read geojson file to pandas df
-pymongo | Mongo db connector
-s2cell | Google S2 cell library to convert lat,long to s2cell of given level
-fastapi, uvicorn | Python microframework for building apis
-dnspython | To resolve new mongo cluster srv dns urls
-python-dotenv | To load env vars from .env file for local development
-sklearn | To use KDTree implementation for finding nearest neighbours
+| Package name     | Usage | 
+|------------------| --- |
+| geopy            | Help with compute gistance between two lat,long pairs| 
+| geopandas        | read geojson file to pandas df| 
+| pymongo          | Mongo db connector| 
+| s2cell           | Google S2 cell library to convert lat,long to s2cell of given level| 
+| fastapi, uvicorn | Python microframework for building apis| 
+| dnspython        | To resolve new mongo cluster srv dns urls| 
+| python-dotenv    | To load env vars from .env file for local development| 
+| sklearn          | To use KDTree implementation for finding nearest neighbours| 
 
 ***Note: Each version of the find api, will use a subset of the above mentioned packages.***
 
@@ -55,12 +56,12 @@ sklearn | To use KDTree implementation for finding nearest neighbours
 
 ### Recommendataion
 - find/{ v1 | v2 | v3 }
-----
-version | details
- --- | ---
-v1 | Fetch relevant records from db based on given input lat/long pair's s2cell. The search begins from s2cell level 14 (0.3 KM) until 10 (81 KM). This approach can scale as the db records grows, by expanding the search space. We can improve the speed of the api by caching the lat/long values by s2cell instead of querying from database everytime.
-v2 | Fetch all records from db, compute distance from input lat/long to all pairs and sort them by distance asc.
-v3 | Fetch all records from db, build a KDTree, query neighbours
+
+| version | details |
+|---------| --- |
+| v1      | Fetch relevant records from db based on given input lat/long pair's s2cell. The search begins from s2cell level 14 (0.3 KM) until 10 (81 KM). This approach can scale as the db records grows, by expanding the search space. We can improve the speed of the api by caching the lat/long values by s2cell instead of querying from database everytime.|
+| v2      | Fetch all records from db, compute distance from input lat/long to all pairs and sort them by distance asc.|
+| v3      | Fetch all records from db, build a KDTree, query neighbours|
 
 
 
