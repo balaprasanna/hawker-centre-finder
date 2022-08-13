@@ -45,12 +45,7 @@ async def find_near_by_hawker_centre_v1(latitude: float = None, longitude: float
             break
 
     near_by_records = list(total_records.values())
-
-    for rec in near_by_records:
-        dist = distance.distance((rec.get("LAT"), rec.get("LONG")), (latitude, longitude))
-        rec['dist'] = {"m": dist.m, "km": dist.km, "miles": dist.miles}
-    near_by_records.sort(key=lambda x: x['dist']['m'], reverse=False)
-    return near_by_records[:RESULT_COUNT]
+    return add_distance_metric(near_by_records, latitude, longitude)
 
 
 @app.get("/find/v2")
@@ -59,11 +54,7 @@ async def find_near_by_hawker_centre_v2(latitude: float = None, longitude: float
     projection = {"_id": False, "NAME": True, "ADDRESS": True, "PHOTOURL": True, "LAT": True, "LONG": True}
     res = collection.find({}, projection)
     all_records = list(res)
-    for rec in all_records:
-        dist = distance.distance((rec.get("LAT"), rec.get("LONG")), (latitude, longitude))
-        rec['dist'] = {"m": dist.m, "km": dist.km, "miles": dist.miles}
-    all_records.sort(key=lambda x: x['dist']['m'], reverse=False)
-    return all_records[:RESULT_COUNT]
+    return add_distance_metric(all_records, latitude, longitude)
 
 
 @app.get("/find/v3")
@@ -76,7 +67,15 @@ async def find_near_by_hawker_centre_v3(latitude: float = None, longitude: float
     tree = KDTree(cords, leaf_size=2)
     dist, ind = tree.query(np.array([[latitude, longitude]]), k=RESULT_COUNT)
     result = pd.Series(all_records).iloc[ind[0]].values.tolist()
-    return result
+    return add_distance_metric(result, latitude, longitude)
+
+
+def add_distance_metric(records, latitude, longitude):
+    for rec in records:
+        dist = distance.distance((rec.get("LAT"), rec.get("LONG")), (latitude, longitude))
+        rec['dist'] = {"m": dist.m, "km": dist.km, "miles": dist.miles}
+    records.sort(key=lambda x: x['dist']['m'], reverse=False)
+    return records[:RESULT_COUNT]
 
 if __name__ == '__main__':
     import uvicorn
